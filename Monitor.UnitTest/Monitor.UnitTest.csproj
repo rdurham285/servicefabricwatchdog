@@ -51,10 +51,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="LogScraperUnitTests.cs" />
     <Compile Include="MonitorPerformanceCounterUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Monitor.EventLogScraper\Monitor.EventLogSender.csproj">
+      <Project>{14c73f04-f189-4988-ac82-1d5f6679656f}</Project>
+      <Name>Monitor.EventLogSender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Monitor.PerformanceCounter\Monitor.PerformanceCounter.csproj">
       <Project>{4a5adb25-d063-4ff0-8bb4-8a9684e5a063}</Project>
       <Name>Monitor.PerformanceCounter</Name>

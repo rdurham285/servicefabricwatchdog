@@ -30,6 +30,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Monitor.EventLogScraper\Monitor.EventLogSender.csproj" />
     <ProjectReference Include="..\Monitor.PerformanceCounter\Monitor.PerformanceCounter.csproj" />
     <ProjectReference Include="..\Monitor\Monitor.csproj" />
   </ItemGroup>
