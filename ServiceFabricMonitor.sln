@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor.UnitTest", "Monitor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{67962A89-DF3F-48CA-A479-C22A23658D39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor.EventLogSender", "Monitor.EventLogScraper\Monitor.EventLogSender.csproj", "{14C73F04-F189-4988-AC82-1D5F6679656F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +50,10 @@ Global
 		{03B43C88-5082-4EB9-8414-474ABA174E7A}.Debug|x64.Build.0 = Debug|x64
 		{03B43C88-5082-4EB9-8414-474ABA174E7A}.Release|x64.ActiveCfg = Release|x64
 		{03B43C88-5082-4EB9-8414-474ABA174E7A}.Release|x64.Build.0 = Release|x64
+		{14C73F04-F189-4988-AC82-1D5F6679656F}.Debug|x64.ActiveCfg = Debug|x64
+		{14C73F04-F189-4988-AC82-1D5F6679656F}.Debug|x64.Build.0 = Debug|x64
+		{14C73F04-F189-4988-AC82-1D5F6679656F}.Release|x64.ActiveCfg = Release|x64
+		{14C73F04-F189-4988-AC82-1D5F6679656F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
