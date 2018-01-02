@@ -1,0 +1,19 @@
+﻿{
+  "PerformanceCounters": [
+    {
+      "Category": "Processor",
+      "Instance": "_Total",
+      "Metric": "% Processor Time",
+    },
+    {
+      "Category": "PhysicalDisk",
+      "Instance": "_Total",
+      "Metric": "% Disk Time",
+    },
+    {
+      "Category": "Memory",
+      "Metric": "% Committed Bytes In Use",
+      "ReportingName": "% Committed Bytes"
+    }
+  ]
+}
