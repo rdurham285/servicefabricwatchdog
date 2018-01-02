@@ -16,6 +16,7 @@ namespace Monitor.Shared.Logging
         /// <param name="instance">Instance identifier.</param>
         /// <param name="testName">Availability test name.</param>
         /// <param name="captured">The time when the availability was captured.</param>
+        /// <param name="location">The location of the test.</param>
         /// <param name="success">True if the availability test ran successfully.</param>
         /// <param name="message">Error message on availability test run failure.</param>
         /// <param name="cancellationToken">CancellationToken instance.</param>
@@ -23,6 +24,7 @@ namespace Monitor.Shared.Logging
             string applicationName,
             string testName,
             DateTimeOffset captured,
+            string location,
             bool success,
             CancellationToken cancellationToken,
             string message = null);

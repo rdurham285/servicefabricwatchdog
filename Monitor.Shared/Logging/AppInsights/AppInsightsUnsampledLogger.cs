@@ -36,6 +36,7 @@ namespace Monitor.Shared.Logging.AppInsights
         /// <param name="instance">Instance identifier.</param>
         /// <param name="testName">Availability test name.</param>
         /// <param name="captured">The time when the availability was captured.</param>
+        ///  <param name="location">The location of the test.</param>
         /// <param name="success">True if the availability test ran successfully.</param>
         /// <param name="message">Error message on availability test run failure.</param>
         /// <param name="cancellationToken">CancellationToken instance.</param>
@@ -43,14 +44,17 @@ namespace Monitor.Shared.Logging.AppInsights
             string applicationName,
             string testName,
             DateTimeOffset captured,
+            string location,
             bool success,
             CancellationToken cancellationToken,
             string message = null)
         {
             if (IsEnabled)
             {
-                AvailabilityTelemetry at = new AvailabilityTelemetry(testName, captured, TimeSpan.FromSeconds(0), null, success, message);
-                at.Properties.Add("Application", applicationName);
+                AvailabilityTelemetry at = new AvailabilityTelemetry(testName, captured, TimeSpan.FromSeconds(0), location, success, message);
+
+                //App insights has a set of "Canned" properties - using a property not in that list seems to not work
+                at.Properties.Add("Service", applicationName);
                 this._client.TrackAvailability(at);
 
                 _client.TrackAvailability(at);
