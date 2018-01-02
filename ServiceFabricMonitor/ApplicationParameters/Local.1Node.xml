@@ -4,6 +4,6 @@
     <Parameter Name="PerformanceCounter_InstanceCount" Value="1" />
     <Parameter Name="PerformanceCounter_InstanceCount" Value="1" />
     <Parameter Name="Monitor_InstanceCount" Value="1" />
-    <Parameter Name="AppInsightsTelemetryKey" Value="PUT YOUR KEY HERE" />
+    <Parameter Name="AppInsightsTelemetryKey" Value="71a8a0db-8073-4c7e-a3a2-8689bc401b7b" />
   </Parameters>
 </Application>

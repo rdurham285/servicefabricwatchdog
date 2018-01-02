@@ -5,8 +5,10 @@ using Monitor.Shared.Logging;
 using Monitor.Shared.Logging.AppInsights;
 using System;
 using System.Collections.Generic;
+using System.Fabric.Health;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Monitor.Shared.Logging.AppInsights
@@ -17,25 +19,107 @@ namespace Monitor.Shared.Logging.AppInsights
 
         public AppInsightsUnsampledLogger(string instrumentationKey)
         {
-            //"71a8a0db-8073-4c7e-a3a2-8689bc401b7b"
             var config = new TelemetryConfiguration(instrumentationKey);
             _client = new TelemetryClient(config);
             _client.InstrumentationKey = instrumentationKey;
         }
-        
-        public void TrackTrace(string message, TraceSeverity severity, IDictionary<string, string> otherMetaData = null)
+
+        /// <summary>
+        /// Gets an indicator if the telemetry is enabled or not.
+        /// </summary>
+        public bool IsEnabled => this._client?.IsEnabled() ?? false;
+
+        /// <summary>
+        /// Calls AI to track the availability.
+        /// </summary>
+        /// <param name="applicationName">Application name.</param>
+        /// <param name="instance">Instance identifier.</param>
+        /// <param name="testName">Availability test name.</param>
+        /// <param name="captured">The time when the availability was captured.</param>
+        /// <param name="success">True if the availability test ran successfully.</param>
+        /// <param name="message">Error message on availability test run failure.</param>
+        /// <param name="cancellationToken">CancellationToken instance.</param>
+        public Task ReportApplicationAvailabilityAsync(
+            string applicationName,
+            string testName,
+            DateTimeOffset captured,
+            bool success,
+            CancellationToken cancellationToken,
+            string message = null)
         {
-            _client.TrackTrace(message, severity.ToAppInsightsSeverity(), otherMetaData);
+            if (IsEnabled)
+            {
+                AvailabilityTelemetry at = new AvailabilityTelemetry(testName, captured, TimeSpan.FromSeconds(0), null, success, message);
+                at.Properties.Add("Application", applicationName);
+                this._client.TrackAvailability(at);
+
+                _client.TrackAvailability(at);
+            }
+
+            return Task.FromResult(0);
         }
 
-        public void TrackMetric(string metricName, double value, IDictionary<string,string> otherMetaData = null)
+        /// <summary>
+        /// Calls AI to report health.
+        /// </summary>
+        /// <param name="applicationName">Application name.</param>
+        /// <param name="serviceName">Service name.</param>
+        /// <param name="instance">Instance identifier.</param>
+        /// <param name="source">Name of the health source.</param>
+        /// <param name="property">Name of the health property.</param>
+        /// <param name="state">HealthState.</param>
+        /// <param name="cancellationToken">CancellationToken instance.</param>
+        public Task ReportServiceHealthAsync(
+            string applicationName,
+            string serviceName,
+            string instance,
+            string source,
+            string property,
+            HealthState state,
+            CancellationToken cancellationToken)
         {
-            _client.TrackMetric(metricName, value, otherMetaData);
+            if (this.IsEnabled)
+            {
+                SeverityLevel sev = (HealthState.Error == state)
+                    ? SeverityLevel.Error
+                    : (HealthState.Warning == state) ? SeverityLevel.Warning : SeverityLevel.Information;
+                TraceTelemetry tt = new TraceTelemetry($"Health report: {source}:{property} is {Enum.GetName(typeof(HealthState), state)}", sev);
+                tt.Context.Cloud.RoleName = serviceName;
+                tt.Context.Cloud.RoleInstance = instance;
+                this._client.TrackTrace(tt);
+            }
+
+            return Task.FromResult(0);
         }
 
-        public void TrackException(Exception e, IDictionary<string, string> otherMetaData = null)
+        public Task ReportTraceAsync(string message, TraceSeverity severity, IDictionary<string, string> otherMetaData = null)
         {
-            _client.TrackException(e, otherMetaData);
+            if (IsEnabled)
+            {
+                _client.TrackTrace(message, severity.ToAppInsightsSeverity(), otherMetaData);
+            }
+
+            return Task.FromResult(0);
+        }
+
+        public Task ReportMetricAsync(string metricName, double value, IDictionary<string,string> otherMetaData = null)
+        {
+            if (IsEnabled)
+            {
+                _client.TrackMetric(metricName, value, otherMetaData);
+            }
+
+            return Task.FromResult(0);
+        }
+
+        public Task ReportExceptionAsync(Exception e, IDictionary<string, string> otherMetaData = null)
+        {
+            if (IsEnabled)
+            {
+                _client.TrackException(e, otherMetaData);
+            }
+
+            return Task.FromResult(0);
         }
 
         public void Dispose()
