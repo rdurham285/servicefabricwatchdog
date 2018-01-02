@@ -169,20 +169,23 @@ namespace Monitor.PerformanceCounter
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                ReportCounters();
-                await Task.Delay(_checkInterval, cancellationToken);
+                await ReportCountersAsync().ConfigureAwait(false);
+                await Task.Delay(_checkInterval, cancellationToken).ConfigureAwait(false);
             }
         }
 
-        private void ReportCounters()
+        private Task ReportCountersAsync()
         {
             lock (thisLock)
             {
                 foreach (var counter in _perfCounters)
                 {
-                    _logger.TrackMetric(counter.FriendlyName, counter.NextValue());
+                    //Can't await inside a lock statement. TODO: Refactor this
+                    _logger.ReportMetricAsync(counter.FriendlyName, counter.NextValue()).Wait();
                 }
             }
+
+            return Task.FromResult(0);
         }
     }
 }
