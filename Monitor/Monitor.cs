@@ -148,7 +148,8 @@ namespace Monitor
         private Task ReportApplicationHealthStateAsync(System.Fabric.Health.ApplicationHealthState appHealthState, CancellationToken cancellationToken)
         {
             //TODO: Applications which are unhealthy - dive down to the service level and report those else where
-            return _logger.ReportApplicationAvailabilityAsync(appHealthState.ApplicationName.AbsolutePath.TrimStart('\\'), "Monitor Watchdog", DateTimeOffset.UtcNow, appHealthState.AggregatedHealthState != System.Fabric.Health.HealthState.Error, cancellationToken);
+            //TODO: Pipe in the location
+            return _logger.ReportApplicationAvailabilityAsync(appHealthState.ApplicationName.AbsolutePath.TrimStart('/'), "Monitor Watchdog", DateTimeOffset.UtcNow, null, appHealthState.AggregatedHealthState != System.Fabric.Health.HealthState.Error, cancellationToken);
         }
     }
 }
